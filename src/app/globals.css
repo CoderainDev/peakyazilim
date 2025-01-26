@@ -3,19 +3,170 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --matrix-color: #00ff9d;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-dark text-white;
+}
+
+/* Matrix Rain Animation */
+@keyframes matrix-bg {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 100%; }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px #00ff9d40,
+                0 0 20px #00ff9d30,
+                0 0 30px #00ff9d20;
+  }
+  to {
+    box-shadow: 0 0 20px #00ff9d50,
+                0 0 30px #00ff9d40,
+                0 0 40px #00ff9d30;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes code-slide {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+
+@layer components {
+  .cyber-grid {
+    @apply bg-cyber-grid bg-[size:50px_50px];
+  }
+  
+  .neon-border {
+    @apply border border-primary relative;
+    box-shadow: 0 0 10px theme('colors.primary'),
+                inset 0 0 10px theme('colors.primary');
+  }
+  
+  .glass-panel {
+    @apply bg-dark-secondary/40 backdrop-blur-lg border border-white/10;
+  }
+  
+  .matrix-bg {
+    @apply relative overflow-hidden;
+    &::before {
+      content: '';
+      @apply absolute inset-0 opacity-10;
+      background: repeating-linear-gradient(0deg,
+        var(--matrix-color) 0%,
+        transparent 50%,
+        var(--matrix-color) 100%);
+      background-size: 100% 200%;
+      animation: matrix-bg 20s linear infinite;
+    }
+  }
+
+  .btn-cyber {
+    @apply px-8 py-3 bg-dark-secondary text-primary border border-primary rounded
+           relative overflow-hidden transition-all duration-300
+           hover:bg-primary/20 hover:scale-105;
+    &::before {
+      content: '';
+      @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+      background: linear-gradient(45deg, transparent, theme('colors.primary'), transparent);
+    }
+    &:hover::before {
+      @apply opacity-30;
+    }
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+  }
+
+  .code-window {
+    @apply glass-panel rounded-lg p-4 relative overflow-hidden;
+    &::before {
+      content: '// CODE';
+      @apply absolute top-2 right-4 text-primary/50 font-mono text-sm;
+    }
+  }
+}
+
+/* Özel scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full;
+  &:hover {
+    @apply bg-primary/50;
+  }
+}
+.btn-cyber-sm {
+  @apply px-4 py-2 text-sm font-medium text-white border border-primary rounded-lg 
+  bg-dark/50 hover:bg-primary/20 transition-all duration-300
+  relative overflow-hidden shadow-[0_0_15px_-3px] shadow-primary/40;
+}
+
+.btn-cyber-sm:before {
+  @apply content-[''] absolute top-0 left-0 w-full h-full;
+  background: linear-gradient(45deg, transparent 25%, rgba(68, 255, 248, 0.1) 50%, transparent 75%);
+  background-size: 200% 200%;
+  animation: cyber-shine 4s infinite;
+}
+
+@keyframes cyber-shine {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* Form elements reset */
+.form-input {
+  @apply w-full px-4 py-3 rounded-lg text-white bg-dark/50 border border-gray-700;
+  @apply focus:ring-2 focus:ring-primary focus:border-transparent outline-none;
+  @apply transition-all duration-200;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #111827 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+/* Form Styles */
+.contact-form {
+  @apply space-y-6;
+}
+
+.contact-input {
+  @apply w-full px-4 py-3 bg-dark/50 border border-gray-700 rounded-lg 
+         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
+         focus:ring-primary focus:border-transparent transition-all duration-200;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.contact-input:-webkit-autofill,
+.contact-input:-webkit-autofill:hover,
+.contact-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  transition: background-color 5000s ease-in-out 0s;
 }
